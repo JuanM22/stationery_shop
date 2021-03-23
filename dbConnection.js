@@ -1,6 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 
-const url = 'mongodb://localhost:27017/webstore';
+const url = 'mongodb://localhost:27017/stationery_Shop';
 var dbClient;
 
 server = {};
