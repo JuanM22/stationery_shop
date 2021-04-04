@@ -1,4 +1,3 @@
-const Customer = require("../model/Customer");
 const dbConnection = require("../dbConnection");
 
 const DaoCustomer = {}
@@ -16,7 +15,23 @@ function saveCustomer(customer) {
             }
             resolve(message);
         });
-    })
+    });
+}
+
+function updateCustomer(customer) {
+    var client = dbConnection.getDbClient();
+    var db = client.db();
+    var message = '';
+    return new Promise(resolve => {
+        db.collection('Customers').updateOne({ customerId: customer.customerId }, { $set: customer }, function (err, result) {
+            if (err) {
+                message = 'Error al actualizar los datos del cliente';
+            } else {
+                message = 'Datos actualizados correctamente';
+            }
+            resolve(message);
+        });
+    });
 }
 
 function listCustomers() {
@@ -33,13 +48,25 @@ function listCustomers() {
     });
 }
 
-function viewCustomer(id) {
-    // const customer = new Customer();
-    // return customer;
+function viewCustomer(customerId) {
+    var customer;
+    var client = dbConnection.getDbClient();
+    var db = client.db();
+    return new Promise(resolve => {
+        db.collection('Customers').findOne({ customerId : customerId }, function (err, result) {
+            if (err) {
+                customer = null;
+            } else {
+                customer = result;
+            }
+            resolve(customer);
+        });
+    })
 }
 
-DaoCustomer.save = listCustomers;
+DaoCustomer.save = saveCustomer;
 DaoCustomer.list = listCustomers;
 DaoCustomer.view = viewCustomer;
+DaoCustomer.update = updateCustomer;
 
 module.exports = DaoCustomer

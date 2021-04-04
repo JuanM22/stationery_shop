@@ -1,9 +1,11 @@
+const City = require('./City');
+
 class Customer {
 
-    constructor(id, address, city, document, email, lastName, name, password, phone) {
-        this.id = id;
+    constructor(id, address, document, email, lastName, name, password, phone) {
+        this.customerId = id;
         this.address = address;
-        this.city = city;
+        this.city = new City();
         this.document = document;
         this.email = email;
         this.lastName = lastName;
