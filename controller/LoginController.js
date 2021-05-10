@@ -6,7 +6,7 @@ async function saveLogin(login){
     return data;
 }
 
-async function viewLogin(login) {
+async function validateLogin(login) {
     await DaoLogin.view(login).then(result => {
         login = result;
     });
@@ -19,7 +19,7 @@ async function updateLogin(login){
 }
 
 LoginController.saveLogin = saveLogin;
-LoginController.viewLogin = viewLogin;
+LoginController.validateLogin = validateLogin;
 LoginController.updateLogin = updateLogin;
 
 module.exports = LoginController
