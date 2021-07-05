@@ -10,9 +10,12 @@ async function listProducts() {
     return productList;
 }
 
-async function saveProduct(product){
+async function saveProduct(product) {
     let data;
-    await DaoProduct.save(product).then(result =>{
+    await DaoProduct.lastProductId().then(result => {
+        product.productId = (result.length > 0) ? result[0].productId + 1 : 1;
+    })
+    await DaoProduct.save(product).then(result => {
         data = result;
     });
     return data;
@@ -26,7 +29,7 @@ async function viewProduct(productId) {
     return product;
 }
 
-async function updateProduct(product){
+async function updateProduct(product) {
     const data = await DaoProduct.update(product);
     return data;
 }

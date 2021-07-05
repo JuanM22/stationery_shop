@@ -53,7 +53,7 @@ function viewProduct(productId) {
     var client = dbConnection.getDbClient();
     var db = client.db();
     return new Promise(resolve => {
-        db.collection('Products').findOne({ productId : productId }, function (err, result) {
+        db.collection('Products').findOne({ productId: productId }, function (err, result) {
             if (err) {
                 product = null;
             } else {
@@ -64,9 +64,25 @@ function viewProduct(productId) {
     })
 }
 
+function lastProductId() {
+    var client = dbConnection.getDbClient();
+    var db = client.db();
+    return new Promise(resolve => {
+        db.collection('Products').find().sort({ productId: -1 }).toArray(function (err, result) {
+            if (err) {
+                resolve('Error ejecutando la operación');
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+
 DaoProduct.save = saveProduct;
 DaoProduct.list = listProducts;
 DaoProduct.view = viewProduct;
 DaoProduct.update = updateProduct;
+DaoProduct.lastProductId = lastProductId;
 
 module.exports = DaoProduct
