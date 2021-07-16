@@ -1,7 +1,6 @@
 const DaoOrder = require('../dao/DaoOrder');
 const DaoCustomer = require('../dao/DaoCustomer');
 const DaoProduct = require('../dao/DaoProduct');
-const DaoService = require('../dao/DaoService');
 const OrderController = {};
 
 async function listOrders(customerId) {
@@ -34,12 +33,6 @@ async function viewOrder(orderId) {
         let product = order.products[i];
         await DaoProduct.view(product.productId).then(result => {
             order.products[i] = result;
-        });
-    }
-    for (let i = 0; i < order.services.length; i++) {
-        let service = order.services[i];
-        await DaoService.view(service.serviceId).then(result => {
-            order.services[i] = result;
         });
     }
     return order;

@@ -34,11 +34,11 @@ function updateProduct(product) {
     });
 }
 
-function listProducts() {
+function listProducts(productType) {
     var client = dbConnection.getDbClient();
     var db = client.db();
     return new Promise(resolve => {
-        db.collection('Products').find().toArray(function (err, result) {
+        db.collection('Products').find({ type: productType }).toArray(function (err, result) {
             if (err) {
                 resolve('Error al listar los productos');
             } else {

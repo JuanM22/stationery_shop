@@ -2,9 +2,9 @@ const DaoProduct = require('../dao/DaoProduct');
 
 const ProductController = {};
 
-async function listProducts() {
+async function listProducts(productType) {
     let productList;
-    await DaoProduct.list().then(result => {
+    await DaoProduct.list(productType).then(result => {
         productList = result;
     });
     return productList;
