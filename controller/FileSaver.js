@@ -10,7 +10,6 @@ function saveFiles(req) {
 }
 
 function saveOneFile(file, resolve) {
-    console.log('entra1');
     let uploadPath = __dirname + 'resources/' + file.name;
     file.mv(uploadPath, function (err) {
         if (err) resolve('Error');
@@ -19,7 +18,6 @@ function saveOneFile(file, resolve) {
 }
 
 function saveSeveralFiles(file, resolve) {
-    console.log('entra2');
     var counter = 0;
     for (let i = 0; i < file.length; i++) {
         let uploadPath = __dirname + 'resources/' + file[i].name;

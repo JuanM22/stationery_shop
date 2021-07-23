@@ -4,27 +4,27 @@ const ProductController = {};
 
 async function listProducts(productType) {
     let productList;
-    await DaoProduct.list(productType).then(result => {
-        productList = result;
+    await DaoProduct.list(productType).then(res => {
+        productList = res;
     });
     return productList;
 }
 
 async function saveProduct(product) {
     let data;
-    await DaoProduct.lastProductId().then(result => {
-        product.productId = (result.length > 0) ? result[0].productId + 1 : 1;
-    })
-    await DaoProduct.save(product).then(result => {
-        data = result;
+    await DaoProduct.lastProductId().then(res => {
+        product.productId = (result.length > 0) ? res[0].productId + 1 : 1;
+    });
+    await DaoProduct.save(product).then(res => {
+        data = res;
     });
     return data;
 }
 
 async function viewProduct(productId) {
     let product;
-    await DaoProduct.view(productId).then(result => {
-        product = result;
+    await DaoProduct.view(productId).then(res => {
+        product = res;
     });
     return product;
 }

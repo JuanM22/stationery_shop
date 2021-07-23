@@ -76,9 +76,25 @@ function viewOrder(orderId) {
     })
 }
 
+function lastOrderId() {
+    var client = dbConnection.getDbClient();
+    var db = client.db();
+    return new Promise(resolve => {
+        db.collection('Orders').find().sort({ orderId: -1 }).toArray(function (err, result) {
+            if (err) {
+                resolve('Error ejecutando la operación');
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+
 DaoOrder.save = saveOrder;
 DaoOrder.list = listOrders;
 DaoOrder.view = viewOrder;
 DaoOrder.update = updateOrder;
+DaoOrder.lastOrderId = lastOrderId;
 
 module.exports = DaoOrder
