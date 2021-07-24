@@ -34,10 +34,11 @@ function updateOrder(order) {
     });
 }
 
-function listOrders(customerId) {
+function listOrders(userId) {
+    console.log(userId);
     var client = dbConnection.getDbClient();
     var db = client.db();
-    if (customerId == 0) {
+    if (userId == 0) {
         return new Promise(resolve => {
             db.collection('Orders').find().toArray(function (err, result) {
                 if (err) {
@@ -49,7 +50,7 @@ function listOrders(customerId) {
         });
     } else {
         return new Promise(resolve => {
-            db.collection('Orders').find({ "customer.customerId" : customerId }).toArray(function (err, result) {
+            db.collection('Orders').find({ "user.userId" : userId }).toArray(function (err, result) {
                 if (err) {
                     resolve('Error al listar los pedidos');
                 } else {
