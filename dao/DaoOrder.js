@@ -35,7 +35,6 @@ function updateOrder(order) {
 }
 
 function listOrders(userId) {
-    console.log(userId);
     var client = dbConnection.getDbClient();
     var db = client.db();
     if (userId == 0) {

@@ -24,7 +24,6 @@ function saveSeveralFiles(file, resolve) {
         file[i].mv(uploadPath, function (err) {
             if (err) resolve('Error');
             else counter++;
-            console.log(counter);
             if (counter == file.length) resolve('files saved successfully');
         });
     }
