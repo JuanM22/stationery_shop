@@ -34,24 +34,35 @@ function updateLogin(login) {
     });
 }
 
-function viewLogin(login) {
-    var login;
+function checkLogin(login) {
+    login = JSON.parse(login);
     var client = dbConnection.getDbClient();
     var db = client.db();
     return new Promise(resolve => {
         db.collection('Logins').findOne({ user: login.user, password: login.password}, function (err, result) {
-            if (err) {
-                login = null;
-            } else {
-                login = result;
-            }
-            resolve(login);
+            if (err) resolve(null);
+            else resolve(result);
         });
-    })
+    });
+}
+
+function lastLoginId() {
+    var client = dbConnection.getDbClient();
+    var db = client.db();
+    return new Promise(resolve => {
+        db.collection('Logins').find().sort({ loginId: -1 }).toArray(function (err, result) {
+            if (err) {
+                resolve('Error ejecutando la operación');
+            } else {
+                resolve(result);
+            }
+        });
+    });
 }
 
 DaoLogin.save = saveLogin;
 DaoLogin.update = updateLogin;
-DaoLogin.view = viewLogin;
+DaoLogin.check = checkLogin;
+DaoLogin.lastLoginId = lastLoginId;
 
 module.exports = DaoLogin;
