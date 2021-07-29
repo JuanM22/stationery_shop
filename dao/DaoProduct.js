@@ -1,81 +1,55 @@
-const dbConnection = require("../dbConnection");
+const Product = require('../model/Product');
 
 const DaoProduct = {}
 
-function saveProduct(product) {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    var message = '';
-    return new Promise(resolve => {
-        db.collection('Products').insertOne(product, function (err) {
-            if (err) {
-                message = 'Error al crear el producto';
-            } else {
-                message = 'El producto ha sido creado correctamente';
-            }
-            resolve(message);
-        });
-    });
+function createProduct(product) {
+    return (product.stock) ?
+        new Product({
+            productId: product.productId,
+            name: product.name,
+            description: product.description,
+            unitPrice: product.unitPrice,
+            stock: product.stock,
+            images: product.images,
+            category: product.category,
+            type: product.type,
+        })
+        :
+        new Product({
+            productId: product.productId,
+            name: product.name,
+            description: product.description,
+            unitPrice: product.unitPrice,
+            images: product.images,
+            category: product.category,
+            type: product.type,
+        })
 }
 
-function updateProduct(product) {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    var message = '';
-    return new Promise(resolve => {
-        db.collection('Products').updateOne({ productId: product.productId }, { $set: product }, function (err) {
-            if (err) {
-                message = 'Error al actualizar los datos del producto';
-            } else {
-                message = 'Datos actualizados correctamente';
-            }
-            resolve(message);
-        });
-    });
+async function saveProduct(product) {
+    const newProduct = createProduct(product);
+    const response = await newProduct.save();
+    return (newProduct === response) ? 'El producto ha sido registrado correctamente' : 'Error al crear el producto';
 }
 
-function listProducts(productType) {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Products').find({ type: productType }).toArray(function (err, result) {
-            if (err) {
-                resolve('Error al listar los productos');
-            } else {
-                resolve(result);
-            }
-        });
-    });
+async function updateProduct(product) {
+    const response = await Product.updateOne({ productId: product.productId }, { $set: product });
+    return (response.nModified === 1) ? 'Datos actualizados correctamente' : 'Error al actualizar los datos del producto';
 }
 
-function viewProduct(productId) {
-    var product;
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Products').findOne({ productId: productId }, function (err, result) {
-            if (err) {
-                product = null;
-            } else {
-                product = result;
-            }
-            resolve(product);
-        });
-    })
+async function listProducts(productType) {
+    const products = await Product.find({ productType: productType });
+    return products;
 }
 
-function lastProductId() {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Products').find().sort({ productId: -1 }).toArray(function (err, result) {
-            if (err) {
-                resolve('Error ejecutando la operación');
-            } else {
-                resolve(result);
-            }
-        });
-    });
+async function viewProduct(productId) {
+    const product = await Product.findOne({ productId: productId });
+    return product;
+}
+
+async function lastProductId() {
+    const products = await Product.find().sort({ productId: -1 });
+    return products;
 }
 
 

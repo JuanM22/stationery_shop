@@ -1,93 +1,46 @@
-const dbConnection = require("../dbConnection");
+const Order = require('../model/Order');
 
 const DaoOrder = {}
 
-function saveOrder(order) {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    var message = '';
-    return new Promise(resolve => {
-        db.collection('Orders').insertOne(order, function (err) {
-            if (err) {
-                message = 'Error al crear el pedido';
-            } else {
-                message = 'El pedido ha sido creado correctamente';
-            }
-            resolve(message);
-        });
+function createOrder(order){
+    return new Order({
+        orderId: order.orderId,
+        user: order.user,
+        state: true,
+        dispatchDate: order.dispatchDate,
+        deliveryDate: order.deliveryDate,
+        totalPrice: order.totalPrice,
+        products: order.products,
+        services: order.services
     });
 }
 
-function updateOrder(order) {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    var message = '';
-    return new Promise(resolve => {
-        db.collection('Orders').updateOne({ orderId: order.orderId }, { $set: { state: order.state } }, function (err) {
-            if (err) {
-                message = 'Error al actualizar los datos del pedido';
-            } else {
-                message = 'Datos actualizados correctamente';
-            }
-            resolve(message);
-        });
-    });
+async function saveOrder(order) {
+    const newOrder = createOrder(order);
+    const response = await newOrder.save();
+    return (newOrder === response) ? 'El pedido ha sido registrado correctamente' : 'Error al crear el pedido';
 }
 
-function listOrders(userId) {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    if (userId == 0) {
-        return new Promise(resolve => {
-            db.collection('Orders').find().toArray(function (err, result) {
-                if (err) {
-                    resolve('Error al listar los pedidos');
-                } else {
-                    resolve(result);
-                }
-            });
-        });
-    } else {
-        return new Promise(resolve => {
-            db.collection('Orders').find({ "user.userId" : userId }).toArray(function (err, result) {
-                if (err) {
-                    resolve('Error al listar los pedidos');
-                } else {
-                    resolve(result);
-                }
-            });
-        });
-    }
+async function updateOrder(order) {
+    const response = await Order.updateOne({ orderId: order.orderId }, { $set: order });
+    return (response.nModified === 1) ? 'Datos actualizados correctamente' : 'Error al actualizar los datos del pedido';
 }
 
-function viewOrder(orderId) {
-    var order;
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Orders').findOne({ orderId: orderId }, function (err, result) {
-            if (err) {
-                order = null;
-            } else {
-                order = result;
-            }
-            resolve(order);
-        });
-    })
+async function listOrders(userId) {
+    var orders = [];
+    if(userId === 0) orders = await Order.find();
+    else orders = await Order.find({"user.userId" : userId});
+    return orders;
 }
 
-function lastOrderId() {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Orders').find().sort({ orderId: -1 }).toArray(function (err, result) {
-            if (err) {
-                resolve('Error ejecutando la operación');
-            } else {
-                resolve(result);
-            }
-        });
-    });
+async function viewOrder(orderId) {
+    const order = await Order.findOne({ orderId: orderId });
+    return order;
+}
+
+async function lastOrderId() {
+    const orders = await Order.find().sort({ orderId: -1 });
+    return orders;
 }
 
 

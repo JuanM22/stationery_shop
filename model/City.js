@@ -1,9 +1,12 @@
-class City {
+const mongoose = require('mongoose');
 
-    constructor(cityId, name) {
-        this.cityId = cityId;
-        this.name = name;
+const City = new mongoose.Schema({
+    cityId: Number,
+    name: String
+},
+    {
+        collection: "Cities"
     }
-}
+);
 
-module.exports = City
+module.exports = mongoose.model("City", City);

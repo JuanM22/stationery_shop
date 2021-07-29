@@ -1,10 +1,13 @@
-class Login {
+const mongoose = require('mongoose');
 
-    constructor(loginId, user, password) {
-        this.loginId = loginId;
-        this.user = user;
-        this.password = password;
+const Login = new mongoose.Schema({
+    loginId: Number,
+    username: String,
+    password: String
+},
+    {
+        collection : 'Logins'
     }
-}
+);
 
-module.exports = Login
+module.exports = mongoose.model("Login", Login);

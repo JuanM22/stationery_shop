@@ -1,18 +1,27 @@
-const City = require('./City');
+const mongoose = require('mongoose');
 
-class Customer {
+const City = require('./City').schema;
 
-    constructor(id, address, document, email, lastName, name, password, phone) {
-        this.customerId = id;
-        this.address = address;
-        this.city = new City();
-        this.document = document;
-        this.email = email;
-        this.lastName = lastName;
-        this.name = name;
-        this.password = password;
-        this.phone = phone;
+const User = new mongoose.Schema({
+    userId: Number,
+    documentType: String,
+    document: String,
+    name: String,
+    lastName: String,
+    birthDate: String,
+    phone: String,
+    city: {
+        type: City,
+        default: {}
+    },
+    address: String,
+    email: String,
+    type: String,
+    userPicture: String
+},
+    {
+        collection: 'Users'
     }
-}
+);
 
-module.exports = Customer
+module.exports = mongoose.model("User", User);

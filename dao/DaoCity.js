@@ -1,35 +1,14 @@
-const dbConnection = require("../dbConnection");
-
+const City = require('../model/City');
 const DaoCity = {}
 
-function listCities() {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Cities').find().toArray(function (err, result) {
-            if (err) {
-                resolve('Error al listar las ciudades');
-            } else {
-                resolve(result);
-            }
-        });
-    });
+async function listCities() {
+    const cities = await City.find();
+    return cities;
 }
 
-function viewCity(cityId) {
-    var city;
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Cities').findOne({ cityId : cityId }, function (err, result) {
-            if (err) {
-                city = null;
-            } else {
-                city = result;
-            }
-            resolve(city);
-        });
-    })
+async function viewCity(cityId) {
+    const city = await City.findOne({cityId: cityId});
+    return city;
 }
 
 DaoCity.list = listCities;

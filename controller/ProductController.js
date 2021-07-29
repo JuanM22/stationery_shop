@@ -13,7 +13,7 @@ async function listProducts(productType) {
 async function saveProduct(product) {
     let data;
     await DaoProduct.lastProductId().then(res => {
-        product.productId = (result.length > 0) ? res[0].productId + 1 : 1;
+        product.productId = (res.length > 0) ? res[0].productId + 1 : 1;
     });
     await DaoProduct.save(product).then(res => {
         data = res;

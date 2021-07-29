@@ -1,15 +1,24 @@
-class Order {
+const mongoose = require('mongoose');
 
-    constructor(orderId, customer, state, dispatchDate, deliveryDate, totalPrice, products, services) {
-        this.orderId = orderId;
-        this.customer = customer;
-        this.state = state;
-        this.dispatchDate = dispatchDate;
-        this.deliveryDate = deliveryDate;
-        this.totalPrice = totalPrice;
-        this.products = products;
-        this.services = services;
+const User = require('./User').schema;
+const Product = require('./Product').schema;
+
+const Order = new mongoose.Schema({
+    orderId: Number,
+    user: {
+        type: User,
+        default: {}
+    },
+    state: Boolean,
+    dispatchDate: String,
+    deliveryDate: String,
+    totalPrice: Number,
+    products: [Product],
+    services: [Product]
+},
+    {
+        collection: 'Orders'
     }
-}
+);
 
-module.exports = Order
+module.exports = mongoose.model("Order", Order);

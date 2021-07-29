@@ -15,12 +15,12 @@ async function saveUser(user){
     await DaoCity.view(user.city.cityId).then(result => {
         city = result;
     });
-    user.city.cityId = city.cityId;
-    user.city.name = city.name;
+    user.city = city;
     await DaoUser.lastUserId().then(res => {
         user.userId = (res.length > 0) ? res[0].userId + 1 : 1;
     })
     const data = await DaoUser.save(user);
+    console.log(data);
     return data;
 }
 

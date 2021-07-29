@@ -1,81 +1,48 @@
-const dbConnection = require("../dbConnection");
+const User = require('../model/User');
 
 const DaoUser = {}
 
-function saveUser(user) {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    var message = '';
-    return new Promise(resolve => {
-        db.collection('Users').insertOne(user, function (err, result) {
-            if (err) {
-                message = 'Error al crear el usuario';
-            } else {
-                message = 'El usuario ha sido registrado correctamente';
-            }
-            resolve(message);
-        });
+function createUser(user){
+    return new User({
+        userId: user.userId,
+        documentType: user.documentType,
+        document: user.document,
+        name: user.name,
+        lastName: user.lastName,
+        birthDate: user.birthDate,
+        phone: user.phone,
+        city: user.city,
+        address: user.address,
+        email: user.email,
+        type: user.type,
+        userPicture: user.userPicture
     });
 }
 
-function updateUser(user) {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    var message = '';
-    return new Promise(resolve => {
-        db.collection('Users').updateOne({ userId: user.userId }, { $set: user }, function (err, result) {
-            if (err) {
-                message = 'Error al actualizar los datos del usuario';
-            } else {
-                message = 'Datos actualizados correctamente';
-            }
-            resolve(message);
-        });
-    });
+async function saveUser(user) {
+    const newUser = createUser(user);
+    const response = await newUser.save();
+    return (newUser === response) ? 'El usuario ha sido registrado correctamente' : 'Error al crear el usuario';
 }
 
-function listUsers() {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Users').find().toArray(function (err, result) {
-            if (err) {
-                resolve('Error al listar los usuarios');
-            } else {
-                resolve(result);
-            }
-        });
-    });
+async function updateUser(user) {
+    const response = await User.updateOne({ userId: user.userId }, { $set: user });
+    return (response.nModified === 1) ? 'Datos actualizados correctamente' : 'Error al actualizar los datos del usuario';
 }
 
-function viewUser(userId) {
-    var customer;
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Users').findOne({ userId : userId }, function (err, result) {
-            if (err) {
-                customer = null;
-            } else {
-                customer = result;
-            }
-            resolve(customer);
-        });
-    })
+async function listUsers() {
+    const users = await User.find();
+    return users;
 }
 
-function lastUserId() {
-    var client = dbConnection.getDbClient();
-    var db = client.db();
-    return new Promise(resolve => {
-        db.collection('Users').find().sort({ orderId: -1 }).toArray(function (err, result) {
-            if (err) {
-                resolve('Error ejecutando la operación');
-            } else {
-                resolve(result);
-            }
-        });
-    });
+async function viewUser(userId) {
+    const user = await User.findOne({ userId: userId });
+    return user;
+}
+
+async function lastUserId() {
+    const users = await User.find().sort({ userId: -1 });
+    return users;
 }
 
 DaoUser.save = saveUser;
