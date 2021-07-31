@@ -11,7 +11,8 @@ const Product = new mongoose.Schema({
     },
     images: [String],
     category: String,
-    type: String
+    type: String,
+    featureList: [{}]
 },
     {
         collection: 'Products'

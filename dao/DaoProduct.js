@@ -38,7 +38,7 @@ async function updateProduct(product) {
 }
 
 async function listProducts(productType) {
-    const products = await Product.find({ productType: productType });
+    const products = await Product.find({ type: productType });
     return products;
 }
 

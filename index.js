@@ -8,7 +8,6 @@ const app = express();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
-const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
 const Login = require('./model/Login');
 
@@ -53,17 +52,26 @@ passport.deserializeUser((id, done) => {
 
 require('./lib/Routes')(app);
 
-app.get('/login', (req, res, next) => {
+app.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, login, info) => {
         if (err) throw err;
-        if (!login) res.send('Credenciales Incorrectas');
-        else {
+        if (login === null) {
+            res.send('Credenciales Incorrectas');
+        } else {
             req.login(login, (err) => {
                 if (err) throw err;
                 res.send('Login successfully');
             });
         }
     })(req, res, next);
+});
+
+app.get('/check', (req, res) => {
+    res.send(req.isAuthenticated());
+});
+
+app.get('/userId', (req, res) => {
+    res.send(req.user.userId.toString());
 });
 
 app.get('/logout', (req, res) => {

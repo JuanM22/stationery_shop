@@ -22,7 +22,7 @@ function createUser(user){
 async function saveUser(user) {
     const newUser = createUser(user);
     const response = await newUser.save();
-    return (newUser === response) ? 'El usuario ha sido registrado correctamente' : 'Error al crear el usuario';
+    return (newUser === response) ? ['El usuario ha sido registrado correctamente', user.userId] : 'Error al crear el usuario';
 }
 
 async function updateUser(user) {

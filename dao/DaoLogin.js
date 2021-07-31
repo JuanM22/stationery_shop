@@ -6,14 +6,15 @@ function createLogin(login){
     return new Login({
         loginId: login.loginId,
         username: login.username,
-        password: login.password
+        password: login.password,
+        userId: login.userId
     });
 }
 
 async function saveLogin(login) {
     const newLogin = createLogin(login);
     const response = await newLogin.save();
-    return (newLogin === response) ? 'El login ha sido registrado correctamente' : 'Error al crear el login';
+    return (newLogin === response) ? 'Login created successfully' : 'Error al crear el login';
 }
 
 async function updateLogin(login) {
