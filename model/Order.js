@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const User = require('./User').schema;
-const Product = require('./Product').schema;
 
 const Order = new mongoose.Schema({
     orderId: Number,
@@ -13,8 +12,8 @@ const Order = new mongoose.Schema({
     dispatchDate: String,
     deliveryDate: String,
     totalPrice: Number,
-    products: [Product],
-    services: [Product]
+    products: [{}],
+    services: [{}]
 },
     {
         collection: 'Orders'

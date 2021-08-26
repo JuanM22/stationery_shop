@@ -1,6 +1,4 @@
 const DaoOrder = require('../dao/DaoOrder');
-const Daouser = require('../dao/Daouser');
-const DaoProduct = require('../dao/DaoProduct');
 const OrderController = {};
 
 async function listOrders(userId) {
@@ -15,7 +13,7 @@ async function saveOrder(order) {
     let data;
     await DaoOrder.lastOrderId().then(res => {
         order.orderId = (res.length > 0) ? res[0].orderId + 1 : 1;
-    })
+    });
     await DaoOrder.save(order).then(res => {
         data = res;
     });
