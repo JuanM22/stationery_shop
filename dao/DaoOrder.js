@@ -22,14 +22,15 @@ async function saveOrder(order) {
 }
 
 async function updateOrder(order) {
-    const response = await Order.updateOne({ orderId: order.orderId }, { $set: order });
+    console.log(order.orderId);
+    const response = await Order.updateOne({ orderId: order.orderId }, { $set: {state : order.state} });
     return (response.nModified === 1) ? 'Datos actualizados correctamente' : 'Error al actualizar los datos del pedido';
 }
 
 async function listOrders(userId) {
     var orders = [];
-    if(userId === 0) orders = await Order.find();
-    else orders = await Order.find({"user.userId" : userId});
+    if(userId === 0) orders = await Order.find({state : true});
+    else orders = await Order.find({"user.userId" : userId, state : true});
     return orders;
 }
 
