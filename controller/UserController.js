@@ -11,16 +11,13 @@ async function listUsers() {
 }
 
 async function saveUser(user){
-    let city;
-    await DaoCity.view(user.city.cityId).then(result => {
-        city = result;
-    });
-    user.city = city;
+    await updateUserCity(user.city).then(res => {
+        user.city = res;
+    })
     await DaoUser.lastUserId().then(res => {
         user.userId = (res.length > 0) ? res[0].userId + 1 : 1;
     })
     const data = await DaoUser.save(user);
-    console.log(data);
     return data;
 }
 
@@ -33,8 +30,19 @@ async function viewUser(userId) {
 }
 
 async function updateUser(user){
+    await updateUserCity(user.city).then(res => {
+        user.city = res;
+    })
     const data = await DaoUser.update(user);
     return data;
+}
+
+async function updateUserCity(userCity){
+    let city;
+    await DaoCity.view(userCity.cityId).then(result => {
+        city = result;
+    });
+    return city;
 }
 
 UserController.listUsers = listUsers;

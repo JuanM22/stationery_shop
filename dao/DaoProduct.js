@@ -11,7 +11,7 @@ function createProduct(product) {
             unitPrice: product.unitPrice,
             stock: product.stock,
             images: product.images,
-            category: product.category,
+            featureList: product.featureList,
             type: product.type,
         })
         :
@@ -21,7 +21,7 @@ function createProduct(product) {
             description: product.description,
             unitPrice: product.unitPrice,
             images: product.images,
-            category: product.category,
+            featureList: product.featureList,
             type: product.type,
         })
 }
